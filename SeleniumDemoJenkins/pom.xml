@@ -10,7 +10,7 @@
 	<url>http://www.example.com</url>
 	<!-- packaging as war file instead of jar -->
 	<packaging>war</packaging>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
@@ -58,6 +58,13 @@
 				<version>1.6.0</version>
 				<configuration>
 					<mainClass>selenium.demo.jenkins.DemoTest</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 		</plugins>
