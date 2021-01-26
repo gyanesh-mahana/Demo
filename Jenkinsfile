@@ -1,0 +1,49 @@
+//checkout from git and run the individual script from the repository
+//groovy declarative script
+// post Jenkins V2.x
+
+pipeline{
+    agent {
+        label "Agent_1"
+    }
+    stages{
+        stage("Git Checkout"){
+            steps{
+                echo "checking out git project"
+                git 'https://github.com/gyanesh-mahana/Demo.git'
+                
+                echo "checking out git project SUCCCESS!!"
+            }
+        }
+        
+        stage("Maven build"){
+            steps{
+                echo "Maven build in progress"
+                dir('JenkinsScriptProject') {
+                    sh '''pwd'''
+                    sh '''mvn package'''
+                }
+                echo "Maven build SUCCESS!!"
+            }
+        }
+        
+        stage("Maven test"){
+            steps{
+                echo "Maven test in progress"
+                dir('JenkinsScriptProject') {
+                    sh '''pwd'''
+                    sh '''mvn test'''
+                }
+                echo "Maven test SUCCESS!!"
+            }
+        }
+        
+        stage("Maven Deploy"){
+            steps{
+                echo "Maven deploy"
+                deploy adapters: [tomcat9(credentialsId: '6c41928c-4b3f-4672-ba81-43ccfe0d40e5', path: '', url: 'http://localhost:8081')], contextPath: 'scriptjenkinswebapp', war: '**/*.war'
+                echo "Maven deploy SUCCESS!!"
+            }
+        }
+    }
+}
