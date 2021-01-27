@@ -5,14 +5,14 @@
 pipeline {
     agent none
     stages {
-//        stage("Say Hello to Master"){
-//            agent {
-//                label "master"
-//            }
-//            steps {
-//                echo "hello master"
-//            }
-//        }
+        stage("Say Hello to Master"){
+            agent {
+                label "master"
+            }
+            steps {
+                echo "hello master"
+            }
+        }
         stage("Git Checkout parallel") {
             parallel {
                 stage("git checkout in Agent 1") {
