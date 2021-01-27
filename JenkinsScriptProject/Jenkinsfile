@@ -1,6 +1,6 @@
-//checkout from git and run the individual script from the repository
-//groovy declarative script
-// post Jenkins V2.x
+//  checkout from git and run the individual script from the repository
+//  groovy declarative script
+//  post Jenkins V2.x
 
 pipeline{
     agent {
@@ -44,6 +44,23 @@ pipeline{
                 deploy adapters: [tomcat9(credentialsId: '6c41928c-4b3f-4672-ba81-43ccfe0d40e5', path: '', url: 'http://localhost:8081')], contextPath: 'scriptjenkinswebapp', war: '**/*.war'
                 echo "Maven deploy SUCCESS!!"
             }
+        }
+    }
+    post{
+        always{
+            echo "Jenkins Script Project"
+        }
+        success{
+            echo "Project Pipeline Successfully Executed"
+        }
+        failure{
+            echo "Project Pipeline Execution Failed"
+        }
+        unstable{
+            echo "Project Build is Unstable"
+        }
+        Changed{
+            echo "Project Status Changed from Previous Status"
         }
     }
 }
