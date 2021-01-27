@@ -3,94 +3,136 @@
 //  post Jenkins V2.x
 
 pipeline {
-  agent none
-  stages {
-    stage("Git Checkout parallel") {
-      parallel {
-        stage("git checkout in Agent 1") {
-          steps {
-            echo "checking out git project in agent 1(say Windows)"
-            git 'https://github.com/gyanesh-mahana/Demo.git'
-            echo "checking out git project in agent 1(say Windows) SUCCCESS!!"
-          }
-        }
-        stage("git checkout in Agent 2") {
-          steps {
-            echo "checking out git project in agent 2(say Linux/MacOS)"
-            git 'https://github.com/gyanesh-mahana/Demo.git'
-            echo "checking out git project in agent 2(say Linux/MacOS) SUCCCESS!!"
-          }
-        }
-      }
-    }
+    agent none
 
-    stage("Maven build parallel") {
-      parallel {
-        stage("aven build in Agent 1") {
-          steps {
-            echo "Maven build in progress in agent 1(say Windows)"
-            dir('JenkinsScriptProject') {
-              sh '''pwd'''
-              sh '''mvn package'''
+    stages {
+        stage("Say Hello to Master){
+            agent {
+                label "master"
             }
-            echo "Maven build in agent 1(say Windows) SUCCESS!!"
-          }
-        }
-        stage("git checkout in Agent 2") {
-          steps {
-            echo "Maven build in progress in agent 2(say Linux/MacOS)"
-            dir('JenkinsScriptProject') {
-              sh '''pwd'''
-              sh '''mvn package'''
+            steps {
+                echo "hello master"
             }
-            echo "Maven build in agent 2(say Linux/MacOS) SUCCESS!!"
-          }
         }
-      }
-    }
 
-    stage("Maven test in Agent 1") {
-      agent {
-        label: "Agent_1"
-      }
-      steps {
-        echo "Maven test in progress"
-        dir('JenkinsScriptProject') {
-          sh '''pwd'''
-          sh '''mvn test'''
+        stage("Git Checkout parallel") {
+
+            parallel {
+
+                stage("git checkout in Agent 1") {
+                    agent {
+                        label "Agent_1"
+                    }
+                    steps {
+                        echo "checking out git project in agent 1(say Windows)"
+                        git 'https://github.com/gyanesh-mahana/Demo.git'
+                        echo "checking out git project in agent 1(say Windows) SUCCCESS!!"
+                    }
+                }
+
+                stage("git checkout in Agent 2") {
+                    agent {
+                        label "Agent_2"
+                    }
+                    steps {
+                        echo "checking out git project in agent 2(say Linux/MacOS)"
+                        git 'https://github.com/gyanesh-mahana/Demo.git'
+                        echo "checking out git project in agent 2(say Linux/MacOS) SUCCCESS!!"
+                    }
+                }
+
+            }
         }
-        echo "Maven test SUCCESS!!"
-      }
-    }
 
-    stage("Maven Deploy by Agent 1") {
-      agent {
-        label: "Agent_1"
-      }
-      steps {
-        echo "Maven deploy"
-        deploy adapters: [tomcat9(credentialsId: '6c41928c-4b3f-4672-ba81-43ccfe0d40e5', path: '', url: 'http://localhost:8081')],
-        contextPath: 'jenkinsfile-parallel-agent-1-webapp',
-        war: '**/*.war'
-        echo "Maven deploy SUCCESS!!"
-      }
+        stage("Maven build parallel") {
+
+            parallel {
+
+                stage("aven build in Agent 1") {
+                    agent {
+                        label "Agent_1"
+                    }
+                    steps {
+                        echo "Maven build in progress in agent 1(say Windows)"
+                        dir('JenkinsScriptProject') {
+                            sh ''
+                            'pwd'
+                            ''
+                            sh ''
+                            'mvn package'
+                            ''
+                        }
+                        echo "Maven build in agent 1(say Windows) SUCCESS!!"
+                    }
+                }
+
+                stage("git checkout in Agent 2") {
+                    agent {
+                        label "Agent_2"
+                    }
+                    steps {
+                        echo "Maven build in progress in agent 2(say Linux/MacOS)"
+                        dir('JenkinsScriptProject') {
+                            sh ''
+                            'pwd'
+                            ''
+                            sh ''
+                            'mvn package'
+                            ''
+                        }
+                        echo "Maven build in agent 2(say Linux/MacOS) SUCCESS!!"
+                    }
+                }
+
+            }
+        }
+
+        stage("Maven test in Agent 1") {
+            agent {
+                label: "Agent_1"
+            }
+            steps {
+                echo "Maven test in progress"
+                dir('JenkinsScriptProject') {
+                    sh ''
+                    'pwd'
+                    ''
+                    sh ''
+                    'mvn test'
+                    ''
+                }
+                echo "Maven test SUCCESS!!"
+            }
+        }
+
+        stage("Maven Deploy by Agent 1") {
+            agent {
+                label: "Agent_1"
+            }
+            steps {
+                echo "Maven deploy"
+                deploy adapters: [tomcat9(credentialsId: '6c41928c-4b3f-4672-ba81-43ccfe0d40e5', path: '', url: 'http://localhost:8081')],
+                    contextPath: 'jenkinsfile-parallel-agent-1-webapp',
+                    war: '**/*.war'
+                echo "Maven deploy SUCCESS!!"
+            }
+        }
     }
-  }
-  post {
-    always {
-      echo "Jenkins Script Project Parallel"
+    post {
+        always {
+            echo "Jenkins Script Project Parallel"
+        }
+        success {
+            echo "Project Pipeline Successfully Executed Parallely"
+        }
+        failure {
+            echo "Project Pipeline Execution Failed Parallely"
+        }
+        unstable {
+            echo "Project Build is Unstable"
+        }
+        changed {
+            echo "Project Status Changed from Previous Status"
+        }
     }
-    success {
-      echo "Project Pipeline Successfully Executed Parallely"
-    }
-    failure {
-      echo "Project Pipeline Execution Failed Parallely"
-    }
-    unstable {
-      echo "Project Build is Unstable"
-    }
-    changed {
-      echo "Project Status Changed from Previous Status"
-    }
-  }
 }
