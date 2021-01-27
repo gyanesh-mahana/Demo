@@ -69,7 +69,7 @@ pipeline {
         }
         stage("Maven test in Agent 1") {
             agent {
-                label: "Agent_1"
+                label "Agent_1"
             }
             steps {
                 echo "Maven test in progress"
@@ -82,7 +82,7 @@ pipeline {
         }
         stage("Maven Deploy by Agent 1") {
             agent {
-                label: "Agent_1"
+                label "Agent_1"
             }
             steps {
                 echo "Maven deploy"
