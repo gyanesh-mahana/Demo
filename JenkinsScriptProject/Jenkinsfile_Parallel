@@ -5,14 +5,14 @@
 pipeline {
     agent none
     stages {
-        stage("Say Hello to Master"){
-            agent {
-                label "master"
-            }
-            steps {
-                echo "hello master"
-            }
-        }
+//        stage("Say Hello to Master"){
+//            agent {
+//                label "master"
+//            }
+//            steps {
+//                echo "hello master"
+//            }
+//        }
         stage("Git Checkout parallel") {
             parallel {
                 stage("git checkout in Agent 1") {
@@ -52,7 +52,7 @@ pipeline {
                         echo "Maven build in agent 1(say Windows) SUCCESS!!"
                     }
                 }
-                stage("git checkout in Agent 2") {
+                stage("Maven build in Agent 2") {
                     agent {
                         label "Agent_2"
                     }
