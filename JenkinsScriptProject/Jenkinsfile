@@ -59,7 +59,7 @@ pipeline{
         unstable{
             echo "Project Build is Unstable"
         }
-        Changed{
+        changed{
             echo "Project Status Changed from Previous Status"
         }
     }
