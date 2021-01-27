@@ -6,7 +6,7 @@ pipeline {
     agent none
 
     stages {
-        stage("Say Hello to Master){
+        stage("Say Hello to Master"){
             agent {
                 label "master"
             }
